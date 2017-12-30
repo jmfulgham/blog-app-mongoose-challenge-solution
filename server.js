@@ -23,8 +23,8 @@ app.get('/posts', (req, res) => {
     })//entire object
     .catch(err => {//catch the error just in case it can't find it
       console.error(err);
-      res.status(500).json({ error: 'something went terribly wrong' });
-    });
+      res.status(500).json({ error: 'something went terribly wrong' });//send the error
+    });//as JSON object with the error.
 });
 
 app.get('/posts/:id', (req, res) => {
@@ -38,13 +38,13 @@ app.get('/posts/:id', (req, res) => {
 });
 
 app.post('/posts', (req, res) => {
-  const requiredFields = ['title', 'content', 'author'];
-  for (let i = 0; i < requiredFields.length; i++) {
-    const field = requiredFields[i];
+  const requiredFields = ['title', 'content', 'author'];//required fields to make a post
+  for (let i = 0; i < requiredFields.length; i++) {//loop to ensure required fields are there
+    const field = requiredFields[i];//set the field to an index in the array to pull in specific field
     if (!(field in req.body)) {
       const message = `Missing \`${field}\` in request body`;
       console.error(message);
-      return res.status(400).send(message);
+      return res.status(400).send(message);//return the error as a JSON message
     }
   }
 
@@ -84,9 +84,9 @@ app.put('/posts/:id', (req, res) => {
   }
 
   const updated = {};
-  const updateableFields = ['title', 'content', 'author'];
-  updateableFields.forEach(field => {
-    if (field in req.body) {
+  const updateableFields = ['title', 'content', 'author'];//required fields for updating
+  updateableFields.forEach(field => {//check to match the fields from the req body
+    if (field in req.body) {//to match the fields in required array
       updated[field] = req.body[field];
     }
   });

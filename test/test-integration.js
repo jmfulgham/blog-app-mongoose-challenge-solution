@@ -19,9 +19,9 @@ send seed data to Db//can just pass through the before function
 create call to retrieve data from db// see above
 //tear down db
 //create GET test// posts is the end point and posts/:id
-create POST test
-create PUT test
-create DELETE test
+//create POST test
+//create PUT test
+//create DELETE test
 update package.json
 
 function tearDownDb(){
@@ -90,10 +90,26 @@ app.delete('/posts/:id', (req, res)=>{
 });
 
 app.put('/posts/:id',(req, res)=>{
+    if(!(req.body.id ===res.body.id)){
+        res.status(400).json({message: "ID is not matching "});
+    }
+
+    const updateFields = ['title', 'content', 'author'];
+    const updates= {};
+    updateFields.forEach(field=>{
+        if (field in req.body){
+            update[field]= req.body[field];
+        }
+    });
+
     BlogPosts
-    .findById(req.params.id)
-    .then()
-})
+    .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+    .then(updatedPost => res.status(204).end())
+    .catch(err=>{
+        console.log(err);
+        res.status(404).json({message: `Uh oh, we couldn't update ${updatedPost}`})
+    });
+});
 
 
 
