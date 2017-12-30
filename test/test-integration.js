@@ -101,7 +101,7 @@ app.put('/posts/:id',(req, res)=>{
             update[field]= req.body[field];
         }
     });
-
+ 
     BlogPosts
     .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
     .then(updatedPost => res.status(204).end())
@@ -111,6 +111,27 @@ app.put('/posts/:id',(req, res)=>{
     });
 });
 
+
+describe ('Seed data for testing', function(){
+    before(function (){
+       return runServer(TEST_DATABASE_URL);
+    });
+
+    beforeEach(function(){
+        return seedData;
+    });
+    
+    afterEach(function(){
+        return tearDownDb();
+    });
+
+    after(function(){
+        return closeServer();
+    });
+
+    describe('GET endpoint')
+    
+})
 
 
 
