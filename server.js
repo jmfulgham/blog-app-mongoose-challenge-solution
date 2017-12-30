@@ -11,26 +11,27 @@ const { BlogPost } = require('./models');
 
 const app = express();
 
+
 app.use(morgan('common'));
 app.use(bodyParser.json());
 
 app.get('/posts', (req, res) => {
-  BlogPost
-    .find()
-    .then(posts => {
-      res.json(posts.map(post => post.serialize()));
-    })
-    .catch(err => {
+  BlogPost//name of our collection from Models
+    .find()//find all documents in the collection
+    .then(posts => {//then promise to send the response in JSON
+      res.json(posts.map(post => post.serialize()));//and format that response across
+    })//entire object
+    .catch(err => {//catch the error just in case it can't find it
       console.error(err);
       res.status(500).json({ error: 'something went terribly wrong' });
     });
 });
 
 app.get('/posts/:id', (req, res) => {
-  BlogPost
-    .findById(req.params.id)
-    .then(post => res.json(post.serialize()))
-    .catch(err => {
+  BlogPost//name of our collection from Models
+    .findById(req.params.id)//find the document in the collection with the matching id
+    .then(post => res.json(post.serialize()))//then send the data back as a formatted JSON object
+    .catch(err => {//catch the error in case something went wrong
       console.error(err);
       res.status(500).json({ error: 'something went horribly awry' });
     });
