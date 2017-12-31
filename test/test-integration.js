@@ -14,16 +14,9 @@ mongoose.Promise= global.Promise;
 
 chai.use(chaiHttp);
 
-create seed Data// already created with seedData
-send seed data to Db//can just pass through the before function
-create call to retrieve data from db// see above
-//tear down db
-//create GET test// posts is the end point and posts/:id
-//create POST test
-//create PUT test
-//create DELETE test
-update package.json
-add Travis files
+
+//update package.json
+//add Travis files
 
 //DB tear down
 function tearDownDb(){
@@ -150,14 +143,35 @@ describe ('Seed data for testing', function(){
         .then(function(count){
             res.body.blogs.should.have.length.of(count);
         });
+    });
+});
+    
+    it('should have the right keys', function(){
+        let blogger;
+        return chai.request(app)
+        .get('/posts')
+        .then(function(res){
+            res.should.have.status(200);
+            res.should.be.json;
+            res.should.be.an('object');
 
-
+            //check for fields
+            res.body.blogs.forEach(function(blogpost){
+                blogpost.should.be.an('object');
+                blogpost.should.include.keys(
+                    'title', 'author', 'content');
+            });
+            blogger= res.body.blogposts[0];
+            return blogger.findById(res.blogger.id);
+            })
+            .then(function(blogpost){
+                resblogpost.id.should.equal(blogpost.id);
+                resblogpost.title.should.equal(blogpost.title);
+                resblogpost.author.should.equal(blogpost.author);
+                resblogpost.content.should.equal(blogpost.content);
+            });
         });
+
+
+    })
     
-    
-})
-
-
-
-
-
