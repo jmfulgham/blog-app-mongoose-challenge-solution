@@ -23,12 +23,15 @@ create call to retrieve data from db// see above
 //create PUT test
 //create DELETE test
 update package.json
+add Travis files
 
+//DB tear down
 function tearDownDb(){
 console.log('!!! Tearing Down DB');
 return mongoose.connection.dropDatabase();
 }
 
+//CRUD
 app.get('/posts', (req, res)=>{
     BlogPost.find()//find all the documents in the collection
     .then(posts=>{
@@ -49,7 +52,7 @@ app.get('/posts/:id', (req, res)=>{
     })
     .catch(err=>{
         console.log(err);
-        res.status(500).json({error: 'Cannot compute'});
+        res.status(500).json({error: 'Cannot compute. Ainno get bih'});
     });
 });
 
@@ -72,7 +75,7 @@ app.post('/posts',(req, res)=>{
         res.status(201).json(posts.serialize())
         .catch(err =>{
             console.log(err);
-            res.status(500).json({error: 'Error. Malfunction'});
+            res.status(500).json({error: 'Error. Malfunction. Could not POST'});
         });
     });
 });
@@ -111,7 +114,8 @@ app.put('/posts/:id',(req, res)=>{
     });
 });
 
-
+//Start the Chai testing
+//Start database and seed data
 describe ('Seed data for testing', function(){
     before(function (){
        return runServer(TEST_DATABASE_URL);
@@ -121,15 +125,35 @@ describe ('Seed data for testing', function(){
         return seedData;
     });
     
-    afterEach(function(){
-        return tearDownDb();
-    });
-
     after(function(){
         return closeServer();
     });
 
-    describe('GET endpoint')
+    afterEach(function () {
+        return tearDownDb();
+    });
+
+//Start testing CRUD functions
+    describe('GET endpoint', function(){
+        it ('should return all blog posts in the database', function(){
+            //it should return all records in the DATABASE (count)
+            //it should be the right data type (json object)
+        let response;
+        return chai.request(app)
+        .get('/posts')
+        .then(function(res){
+            res = response;
+            res.should.have.status(200);
+            res.body.blogs.should.have.length.of.at.least(1);
+            return BlogPosts.count()
+        })
+        .then(function(count){
+            res.body.blogs.should.have.length.of(count);
+        });
+
+
+        });
+    
     
 })
 
