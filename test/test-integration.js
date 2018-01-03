@@ -7,8 +7,7 @@ const mongoose = require('mongoose');
 const seedData= require('../seed-data');
 const { app, runServer, closeServer } = require('../server');
 const { TEST_DATABASE_URL } = require('../config');
-const {BlogPost}= require('../model');
-const { runServer, app, closeServer }= require('../server');
+const {BlogPost}= require('../models');
 const bodyParser = require('body-parser');
 mongoose.Promise= global.Promise;
 
@@ -115,7 +114,7 @@ describe ('Seed data for testing', function(){
     });
 
     beforeEach(function(){
-        return seedData;
+        return BlogPost.create(seedData);
     });
     
     after(function(){
@@ -135,43 +134,56 @@ describe ('Seed data for testing', function(){
         return chai.request(app)
         .get('/posts')
         .then(function(res){
-            res = response;
-            res.should.have.status(200);
-            res.body.blogs.should.have.length.of.at.least(1);
-            return BlogPosts.count()
+            response = res;
+            response.should.have.status(200);
         })
         .then(function(count){
-            res.body.blogs.should.have.length.of(count);
+            return BlogPost.count();
+            response.body.should.have.length.of(count);
         });
     });
-});
+//});
     
     it('should have the right keys', function(){
         let blogger;
         return chai.request(app)
         .get('/posts')
         .then(function(res){
-            res.should.have.status(200);
-            res.should.be.json;
-            res.should.be.an('object');
-
+            blogger=res;
+            blogger.should.have.status(200);
+            blogger.should.be.json;
+            blogger.should.be.an('object');
             //check for fields
-            res.body.blogs.forEach(function(blogpost){
-                blogpost.should.be.an('object');
-                blogpost.should.include.keys(
-                    'title', 'author', 'content');
-            });
-            blogger= res.body.blogposts[0];
-            return blogger.findById(res.blogger.id);
-            })
-            .then(function(blogpost){
-                resblogpost.id.should.equal(blogpost.id);
-                resblogpost.title.should.equal(blogpost.title);
-                resblogpost.author.should.equal(blogpost.author);
-                resblogpost.content.should.equal(blogpost.content);
-            });
+            blogger.body.forEach(function(){
+                blogger.body.should.be.an('array');
+                blogger.body.should.have.keys(['title', 'author', 'content']);
+             });
+            // let posting= res.body.blogposts[0];
+            // return posting.findById(res.posting.id);
+            // });
+            // .then(function(blogpost){
+            //     resblogpost.id.should.equal(blogpost.id);
+            //     resblogpost.title.should.equal(blogpost.title);
+            //     resblogpost.author.should.equal(blogpost.author);
+            //     resblogpost.content.should.equal(blogpost.content);
+            // });
         });
 
+        // it ('should post new blog post', function(){
+        //     let newPost={title: "Awww schucky ducky, I am a new blog post", author:`Mone't Fulgham`, content: `I'm gonna tell you a story about an aspiring web developer...`};
+        //     //return the POST request
+        //     //send new app
+        //     //check it is a JSON object
+        //     //Check the status is correct, 201
+        //     //check there is an id
+        //     return chai.request(app)
+        //     .post('/posts')
+        //     .then(function(res){
+        //         res.status.should.be(201);
+        //         res.should.be.json;
+        //     })
+        // })
 
-    })
-    
+    });
+});
+});
