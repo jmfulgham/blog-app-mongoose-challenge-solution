@@ -154,6 +154,7 @@ describe ('Seed data for testing', function(){
             blogger.should.be.json;
             blogger.should.be.an('object');
             //check for fields
+            console.log(blogger.body);
             blogger.body.forEach(function(){
                 blogger.body.should.be.an('array');
                 blogger.body.should.have.keys(['title', 'author', 'content']);
