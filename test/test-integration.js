@@ -10,12 +10,11 @@ const {
     runServer,
     closeServer
 } = require('../server');
-const {
-  TEST_DATABASE_URL
-} = require('../config');
-const {
-  BlogPost
-} = require('../models');
+const { TEST_DATABASE_URL} = require('../config');
+
+ 
+const { BlogPost} = require('../models');
+
 const bodyParser = require('body-parser');
 mongoose.Promise = global.Promise;
 
@@ -199,26 +198,32 @@ describe('Seed data for testing', function () {
                             onePost.title.should.equal(BlogPost.title);
                             onePost.author.should.equal(BlogPost.author);
                             onePost.content.should.equal(BlogPost.content);
+                    });
+                });
+            });
 
+    describe('POST endpoints', function(){
+                it('should post new blog post with correct keys', function () {
+                    let newPost = { title: "Awww schucky ducky, I am a new blog post", author: `Mone't Fulgham`, content: `I'm gonna tell you a story about an aspiring web developer...` };
+                    //     //return the POST request
+                    //     //send new app
+                    //     //check it is a JSON object
+                    //     //Check the status is correct, 201
+                    //     //check there is an id
+                    return chai.request(app)
+                        .post('/posts')
+                        .send(newPost)
+                        .then(function (res) {
+                            res.should.have.status(201);
+                            res.should.be.json;
+                            res.body.should.be.an(`object`);
+                            res.body.should.include.keys('title','author','content','id');
+                      
+                             return BlogPost.findById(newPost);
+                             res.id.should.be(newPost.id);
 
+                        })
 
-
-                        // it ('should post new blog post', function(){
-                        //     let newPost={title: "Awww schucky ducky, I am a new blog post", author:`Mone't Fulgham`, content: `I'm gonna tell you a story about an aspiring web developer...`};
-                        //     //return the POST request
-                        //     //send new app
-                        //     //check it is a JSON object
-                        //     //Check the status is correct, 201
-                        //     //check there is an id
-                        //     return chai.request(app)
-                        //     .post('/posts')
-                        //     .then(function(res){
-                        //         res.status.should.be(201);
-                        //         res.should.be.json;
-                        //     })
-                        //})
-
-                    
-                
-            
-                    })})})})
+                })
+    });
+})
