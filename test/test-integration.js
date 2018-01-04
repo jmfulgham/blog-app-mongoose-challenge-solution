@@ -218,15 +218,17 @@ describe('Seed data for testing', function () {
                             res.should.be.json;
                             res.body.should.be.an(`object`);
                             res.body.should.include.keys('title','author','content','id');
-                      
-                            //  return BlogPost.findById(newPost.id)
-                            //  .then(function(_res){
-                            //     res.id.should.be(newPost.id); 
-                            //  })
+                             BlogPost.findById(res.body.id)
+                             .then(function(_res){
+                                _res._id.toString().should.equal(res.body.id); 
+                                _res.content.should.equal(res.body.content);
+                                _res.title.should.equal(res.body.title);
+                             })
+                             .catch(function (err) { console.log(err) });
                              
 
-                        })
+                        });
 
-                })
+                });
     });
-})
+});
