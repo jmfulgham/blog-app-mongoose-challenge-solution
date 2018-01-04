@@ -219,8 +219,11 @@ describe('Seed data for testing', function () {
                             res.body.should.be.an(`object`);
                             res.body.should.include.keys('title','author','content','id');
                       
-                             return BlogPost.findById(newPost);
-                             res.id.should.be(newPost.id);
+                            //  return BlogPost.findById(newPost.id)
+                            //  .then(function(_res){
+                            //     res.id.should.be(newPost.id); 
+                            //  })
+                             
 
                         })
 
